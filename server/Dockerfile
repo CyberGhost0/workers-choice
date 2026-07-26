@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --omit=dev
 
 # Copy source code
 COPY . .
@@ -21,5 +21,5 @@ RUN npm run build
 # Expose port
 EXPOSE 4000
 
-# Start server
-CMD ["npm", "start"]
+# Start server (migrations run via start script)
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
