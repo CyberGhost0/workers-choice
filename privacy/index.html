@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy - Workers Choice</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0b; color: #e4e4e7; line-height: 1.6; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+    .navbar {
+      background: rgba(10,10,11,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid #27272a; position: sticky; top: 0; z-index: 100;
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    }
+    .navbar a { color: #a1a1aa; text-decoration: none; font-size: 0.9rem; }
+    .navbar a:hover { color: #e4e4e7; }
+    .logo span:first-child { color: #f59e0b; font-weight: 700; }
+    .logo span:last-child { color: #22c55e; font-weight: 700; }
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      border-bottom: 1px solid #27272a; padding: 64px 0 48px; text-align: center;
+    }
+    .hero .emoji { font-size: 3rem; margin-bottom: 16px; }
+    .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 12px; }
+    .hero p { color: #a1a1aa; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+    .content { padding: 48px 0; }
+    .content p { color: #a1a1aa; margin-bottom: 16px; }
+    .links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 24px; border-radius: 10px; font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-primary { background: #f59e0b; color: #0a0a0b; }
+    .btn-primary:hover { background: #d97706; }
+    .btn-outline { border: 1px solid #3f3f46; color: #e4e4e7; }
+    .btn-outline:hover { background: #27272a; }
+    .back { text-align: center; padding: 32px 0; }
+    .back a { color: #f59e0b; text-decoration: none; }
+    .back a:hover { text-decoration: underline; }
+    @media (max-width: 640px) { .hero h1 { font-size: 1.75rem; } .hero { padding: 40px 0 32px; } }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <a href="../" class="logo"><span>Workers</span><span>Choice</span></a>
+    <a href="../">&larr; Back to Home</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="container">
+    <div class="emoji">&#x1F496;</div>
+    <h1>Privacy</h1>
+    <p>Our commitment to protecting your data. Learn how we collect, use, and safeguard your information.</p>
+    <div class="links">
+      <a href="../" class="btn btn-outline">&larr; Back to Home</a>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container">
+    <h2 style="font-size:1.3rem;margin-bottom:12px;">About this Page</h2>
+    <p>Our commitment to protecting your data. Learn how we collect, use, and safeguard your information. Your privacy matters to us.</p>
+    <p>To run the full application with live data, follow the <a href="../#setup" style="color:#f59e0b;">setup guide</a> and execute <code style="background:#27272a;padding:2px 8px;border-radius:4px;font-size:0.85rem;">docker compose up -d</code> from the project root.</p>
+  </div>
+</section>
+
+<div class="back">
+  <a href="../">&larr; Back to Workers Choice Home</a>
+</div>
+
+</body>
+</html>

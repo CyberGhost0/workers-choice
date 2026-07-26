@@ -1,0 +1,22 @@
+[Unit]
+Description=Workers-Choice Frontend
+After=network.target workers-choice-api.service
+Wants=workers-choice-api.service
+
+[Service]
+Type=simple
+User=mpanshak
+Group=mpanshak
+WorkingDirectory=/home/mpanshak/workers-choice/client
+ExecStart=/usr/bin/npx next start -p 3000
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Environment
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+[Install]
+WantedBy=multi-user.target

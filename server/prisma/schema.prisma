@@ -1,0 +1,490 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User roles
+enum UserRole {
+  CUSTOMER
+  ARTISAN
+  SELLER
+  ADMIN
+}
+
+// Account status for moderation
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+  DEACTIVATED
+}
+
+// Order/Job status
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+// Photo types for before/after
+enum PhotoType {
+  BEFORE
+  DURING
+  AFTER
+}
+
+// Price types for services
+enum PriceType {
+  HOURLY
+  FIXED
+  STARTING_AT
+}
+
+// Join request status
+enum JoinRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// User model
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  passwordHash  String        @map("password_hash")
+  role          UserRole      @default(CUSTOMER)
+  emailVerified Boolean       @default(false) @map("email_verified")
+  accountStatus AccountStatus @default(ACTIVE) @map("account_status")
+  suspendedAt   DateTime?     @map("suspended_at")
+  suspensionReason String?    @map("suspension_reason")
+  suspendedUntil DateTime?    @map("suspended_until")
+  bannedAt      DateTime?     @map("banned_at")
+  banReason     String?       @map("ban_reason")
+  deactivatedAt DateTime?     @map("deactivated_at")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  profile       Profile?
+  businessProfile BusinessProfile?
+  orders        Order[]    @relation("CustomerOrders")
+  reviewsGiven  Review[]   @relation("ReviewsGiven")
+  reviewsReceived Review[] @relation("ReviewsReceived")
+  messagesSent  Message[]  @relation("MessagesSent")
+  messagesReceived Message[] @relation("MessagesReceived")
+  jobPhotos     JobPhoto[] @relation("JobPhotosUploaded")
+  groupMemberships GroupMember[]
+  joinRequests  JoinRequest[]
+  posts         Post[]
+  postLikes     PostLike[]
+  comments      Comment[]
+
+  // Two-factor authentication
+  twoFactorSecret  String?  @map("two_factor_secret")
+  twoFactorEnabled Boolean  @default(false) @map("two_factor_enabled")
+
+  // Follow relations
+  followedBy    Follow[] @relation("Following")
+  following     Follow[] @relation("Followers")
+  passwordResets PasswordReset[]
+  moderationActionsPerformed ModerationAction[] @relation("Moderator")
+  moderationActionsTargeted  ModerationAction[] @relation("ModeratedUser")
+  reportsMade   MemberReport[] @relation("ReportedBy")
+  reportsTargeted MemberReport[] @relation("ReportedUser")
+
+  @@map("users")
+}
+
+// User profile
+model Profile {
+  id            String   @id @default(cuid())
+  userId        String   @unique @map("user_id")
+  fullName      String   @map("full_name")
+  phone         String?
+  avatarUrl     String?  @map("avatar_url")
+  backgroundUrl String?  @map("background_url")
+  latitude      Float?
+  longitude     Float?
+  address       String?
+  city          String?
+  state         String?
+  country       String?
+  bio           String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  lastProfileUpdate DateTime? @map("last_profile_update")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// Business profile for artisans and sellers
+model BusinessProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique @map("user_id")
+  businessName    String   @map("business_name")
+  category        String
+  description     String?
+  logoUrl         String?  @map("logo_url")
+  yearsExperience Int?     @map("years_experience")
+  hourlyRate      Float?   @map("hourly_rate")
+  isVerified      Boolean  @default(false) @map("is_verified")
+  averageRating   Float    @default(0) @map("average_rating")
+  totalReviews    Int      @default(0) @map("total_reviews")
+  stripeAccountId String?  @map("stripe_account_id")
+  chargesEnabled  Boolean  @default(false) @map("charges_enabled")
+  payoutsEnabled  Boolean  @default(false) @map("payouts_enabled")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services Service[]
+  products Product[]
+  orders   Order[]   @relation("ProviderOrders")
+
+  @@map("business_profiles")
+}
+
+// Services offered by artisans
+model Service {
+  id          String    @id @default(cuid())
+  artisanId   String    @map("artisan_id")
+  title       String
+  description String?
+  price       Float?
+  priceType   PriceType @default(FIXED) @map("price_type")
+  images      String[]
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  artisan BusinessProfile @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  orders  Order[]
+
+  @@map("services")
+}
+
+// Products offered by sellers
+model Product {
+  id            String   @id @default(cuid())
+  sellerId      String   @map("seller_id")
+  title         String
+  description   String?
+  price         Float
+  stockQuantity Int      @default(0) @map("stock_quantity")
+  images        String[]
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  seller BusinessProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@map("products")
+}
+
+// Orders/Bookings
+model Order {
+  id                    String      @id @default(cuid())
+  customerId            String      @map("customer_id")
+  providerId            String      @map("provider_id")
+  serviceId             String?     @map("service_id")
+  status                OrderStatus @default(PENDING)
+  scheduledDate         DateTime?   @map("scheduled_date")
+  totalAmount           Float       @map("total_amount")
+  platformFee           Float       @map("platform_fee")
+  providerPayout        Float       @map("provider_payout")
+  stripePaymentIntentId String?     @map("stripe_payment_intent_id")
+  stripeTransferId      String?     @map("stripe_transfer_id")
+  customerConfirmed     Boolean     @default(false) @map("customer_confirmed")
+  providerConfirmed     Boolean     @default(false) @map("provider_confirmed")
+  createdAt             DateTime    @default(now()) @map("created_at")
+  completedAt           DateTime?   @map("completed_at")
+
+  // Relations
+  customer   User              @relation("CustomerOrders", fields: [customerId], references: [id])
+  provider   BusinessProfile   @relation("ProviderOrders", fields: [providerId], references: [id])
+  service    Service?          @relation(fields: [serviceId], references: [id])
+  reviews    Review[]
+  messages   Message[]
+  jobPhotos  JobPhoto[]
+
+  @@map("orders")
+}
+
+// Reviews
+model Review {
+  id         String   @id @default(cuid())
+  orderId    String   @map("order_id")
+  reviewerId String   @map("reviewer_id")
+  revieweeId String   @map("reviewee_id")
+  rating     Int
+  comment    String?
+  images     String[]
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  order    Order @relation(fields: [orderId], references: [id])
+  reviewer User  @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+  reviewee User  @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+
+  @@map("reviews")
+}
+
+// Messages for chat
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String   @map("sender_id")
+  receiverId String   @map("receiver_id")
+  orderId    String?  @map("order_id")
+  content    String
+  attachments String[]
+  isRead     Boolean  @default(false) @map("is_read")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  sender   User  @relation("MessagesSent", fields: [senderId], references: [id])
+  receiver User  @relation("MessagesReceived", fields: [receiverId], references: [id])
+  order    Order? @relation(fields: [orderId], references: [id])
+
+  @@map("messages")
+}
+
+// Job photos (before/after)
+model JobPhoto {
+  id         String    @id @default(cuid())
+  orderId    String    @map("order_id")
+  uploaderId String    @map("uploader_id")
+  photoType  PhotoType @map("photo_type")
+  url        String
+  caption    String?
+  uploadedAt DateTime  @default(now()) @map("uploaded_at")
+
+  // Relations
+  order    Order @relation(fields: [orderId], references: [id])
+  uploader User  @relation("JobPhotosUploaded", fields: [uploaderId], references: [id])
+
+  @@map("job_photos")
+}
+
+// Webhook events for Stripe
+model WebhookEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique @map("stripe_event_id")
+  type          String
+  payload       Json
+  status        String   @default("pending")
+  attempts      Int      @default(0)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("webhook_events")
+}
+
+// Skill Groups
+model SkillGroup {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  category        String
+  memberCount     Int       @default(0) @map("member_count")
+  pendingRequests Int       @default(0) @map("pending_requests")
+  createdBy       String    @map("created_by")
+  status          String    @default("active")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  members  GroupMember[]
+  requests JoinRequest[]
+  reports  MemberReport[]
+
+  @@map("skill_groups")
+}
+
+// Group Members
+model GroupMember {
+  id        String     @id @default(cuid())
+  groupId   String     @map("group_id")
+  userId    String     @map("user_id")
+  role      String     @default("member")
+  status    String     @default("active")
+  suspendedAt DateTime? @map("suspended_at")
+  suspensionReason String? @map("suspension_reason")
+  removedAt  DateTime? @map("removed_at")
+  joinedAt  DateTime   @default(now()) @map("joined_at")
+
+  // Relations
+  group SkillGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+// Join Requests
+model JoinRequest {
+  id         String          @id @default(cuid())
+  groupId    String          @map("group_id")
+  userId     String          @map("user_id")
+  message    String?
+  status     JoinRequestStatus @default(PENDING)
+  reviewedBy String?         @map("reviewed_by")
+  reviewedAt DateTime?       @map("reviewed_at")
+  createdAt  DateTime        @default(now()) @map("created_at")
+  updatedAt  DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  group  SkillGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("join_requests")
+}
+
+// Report status
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
+}
+
+// Member Reports for group moderation
+model MemberReport {
+  id          String       @id @default(cuid())
+  groupId     String       @map("group_id")
+  reporterId  String       @map("reporter_id")
+  targetUserId String      @map("target_user_id")
+  reason      String
+  description String?
+  status      ReportStatus @default(PENDING)
+  resolvedBy  String?      @map("resolved_by")
+  resolvedAt  DateTime?    @map("resolved_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  group       SkillGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  reporter    User       @relation("ReportedBy", fields: [reporterId], references: [id])
+  targetUser  User       @relation("ReportedUser", fields: [targetUserId], references: [id])
+
+  @@map("member_reports")
+}
+
+// Moderation action audit trail
+model ModerationAction {
+  id             String   @id @default(cuid())
+  actionType     String   @map("action_type")
+  targetUserId   String   @map("target_user_id")
+  performedById  String   @map("performed_by_id")
+  reason         String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  targetUser    User @relation("ModeratedUser", fields: [targetUserId], references: [id])
+  performedBy   User @relation("Moderator", fields: [performedById], references: [id])
+
+  @@map("moderation_actions")
+}
+
+// Platform Announcements / News
+model Announcement {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  type      String    @default("news")
+  imageUrl  String?   @map("image_url")
+  isActive  Boolean   @default(true) @map("is_active")
+  expiresAt DateTime? @map("expires_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("announcements")
+}
+
+// Follows
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String   @map("follower_id")
+  followingId String   @map("following_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  follower  User @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+// Posts for social wall
+model Post {
+  id         String   @id @default(cuid())
+  authorId   String   @map("author_id")
+  content    String
+  images     String[]
+  videos     String[]
+  likes      Int      @default(0)
+  shares     Int      @default(0)
+  visibility String   @default("public")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments Comment[]
+  postLikes PostLike[]
+
+  @@map("posts")
+}
+
+// Post comments
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  authorId  String   @map("author_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+// Post likes
+model PostLike {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("post_likes")
+}
+
+// Password Reset Tokens
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_resets")
+}

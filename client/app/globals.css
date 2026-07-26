@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 33% 95%;
+    --foreground: 222.2 84% 3%;
+    --card: 0 0% 98%;
+    --card-foreground: 222.2 84% 3%;
+    --primary: 238.7 83.5% 66.7%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 37.7 92.1% 50.2%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 33% 92%;
+    --muted-foreground: 215 25% 30%;
+    --accent: 210 33% 92%;
+    --accent-foreground: 222.2 84% 3%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 28% 82%;
+    --input: 214 28% 82%;
+    --ring: 238.7 83.5% 66.7%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222 80% 5%;
+    --foreground: 210 40% 96%;
+    --card: 222 75% 8%;
+    --card-foreground: 210 40% 98%;
+    --primary: 238.7 83.5% 66.7%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 37.7 92.1% 50.2%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 217 30% 14%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 30% 14%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 30% 18%;
+    --input: 217 30% 18%;
+    --ring: 238.7 83.5% 66.7%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Ensure all form elements have visible text */
+  input, textarea, select {
+    @apply text-foreground;
+    color: hsl(var(--foreground));
+  }
+  /* Labels and headings should always be dark */
+  label, h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground;
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+}
+
+/* Focus visible styles */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
+}
+
+/* Custom animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s infinite;
+}
+
+/* Image upload preview */
+.image-upload-preview {
+  @apply relative overflow-hidden rounded-lg border-2 border-dashed border-muted-foreground/25;
+}
+
+.image-upload-preview:hover {
+  @apply border-primary/50;
+}
+
+/* Post card styles */
+.post-card {
+  @apply bg-card rounded-xl shadow-sm border transition-shadow hover:shadow-md;
+}
+
+/* Like button animation */
+@keyframes like-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.like-animate {
+  animation: like-pop 0.3s ease-out;
+}
+
+/* Force dark mode - ensure all elements use dark theme colors */
+.dark, html.dark {
+  color-scheme: dark;
+}
+.dark body,
+html.dark body {
+  background-color: hsl(222 80% 5%) !important;
+  color: hsl(210 40% 96%) !important;
+}
+.dark input, .dark textarea, .dark select,
+html.dark input, html.dark textarea, html.dark select {
+  background-color: hsl(217 30% 14%) !important;
+  color: hsl(210 40% 96%) !important;
+  border-color: hsl(217 30% 18%) !important;
+}
+.dark label, .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, .dark p, .dark span, .dark td, .dark th,
+html.dark label, html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6, html.dark p, html.dark span, html.dark td, html.dark th {
+  color: hsl(210 40% 96%) !important;
+}
+.dark a, html.dark a {
+  color: hsl(238.7 83.5% 66.7%) !important;
+}
+.dark card, .dark [class*="bg-card"], html.dark card, html.dark [class*="bg-card"] {
+  background-color: hsl(222 75% 8%) !important;
+  color: hsl(210 40% 98%) !important;
+}
+
+/* iOS safe area utilities */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}

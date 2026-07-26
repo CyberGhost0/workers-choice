@@ -1,0 +1,23 @@
+[Unit]
+Description=Workers-Choice API Server
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=mpanshak
+Group=mpanshak
+WorkingDirectory=/home/mpanshak/workers-choice/server
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Environment
+Environment=NODE_ENV=production
+Environment=PORT=4000
+EnvironmentFile=/home/mpanshak/workers-choice/server/.env
+
+[Install]
+WantedBy=multi-user.target
