@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Workers Choice - Artisan Marketplace</title>
   <meta name="description" content="Connect with verified local artisans, service providers, and product sellers in your neighborhood." />
+  <meta name="theme-color" content="#0a0a0b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Workers Choice" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0b; color: #e4e4e7; line-height: 1.6; }
@@ -109,6 +116,8 @@
   <div class="container nav-inner">
     <a href="#" class="nav-logo"><span>Workers</span><span>Choice</span></a>
     <div class="nav-links">
+      <a href="house-rent/">House Rent</a>
+      <a href="house-for-sale/">House for Sale</a>
       <a href="#services">Services</a>
       <a href="#top-rated">Top Rated</a>
       <a href="#pages">All Pages</a>
@@ -344,6 +353,8 @@
       <a href="cart/" class="page-item"><div class="emoji">&#x1F6D2;</div><span>Cart</span></a>
       <a href="products/" class="page-item"><div class="emoji">&#x1F4E6;</div><span>Products</span></a>
       <a href="auth/" class="page-item"><div class="emoji">&#x1F3AB;</div><span>Login / Register</span></a>
+      <a href="house-rent/" class="page-item"><div class="emoji">&#x1F3E0;</div><span>House Rent</span></a>
+      <a href="house-for-sale/" class="page-item"><div class="emoji">&#x1F3E1;</div><span>House for Sale</span></a>
       <a href="dashboard/services/" class="page-item"><div class="emoji">&#x1F4BB;</div><span>Services</span></a>
       <a href="about/" class="page-item"><div class="emoji">&#x2139;</div><span>About</span></a>
       <a href="contact/" class="page-item"><div class="emoji">&#x1F4DE;</div><span>Contact</span></a>
@@ -379,4 +390,9 @@
 </footer>
 
 </body>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
 </html>
