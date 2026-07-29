@@ -316,25 +316,24 @@ async function main() {
     // Plumbing services
     { artisanIdx: 0, title: 'Pipe Repair & Installation', description: 'Fix leaky pipes, install new plumbing systems', price: 25000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=800', 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800'] },
     { artisanIdx: 0, title: 'Drain Cleaning', description: 'Professional drain and sewer cleaning service', price: 15000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=800'] },
-    { artisanIdx: 0, title: 'Water Heater / Geyser Installation', description: 'Install or repair water heater systems', price: 75000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=800'] },
+    { artisanIdx: 0, title: 'Water Heater / Geyser Installation', description: 'Install or repair water heater systems', price: 75000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1582894940187-27bd69b924d0?w=800'] },
     // Cleaning services
     { artisanIdx: 1, title: 'House Cleaning', description: 'Complete residential cleaning service', price: 20000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800', 'https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?w=800'] },
     { artisanIdx: 1, title: 'Office Cleaning', description: 'Professional office and commercial cleaning', price: 35000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=800'] },
     // Electrical services
     { artisanIdx: 2, title: 'Electrical Repairs & Wiring', description: 'Fix electrical issues, rewiring, and installations', price: 25000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800'] },
     { artisanIdx: 2, title: 'Inverter & Solar Installation', description: 'Install inverter systems and solar panels', price: 150000, priceType: 'STARTING_AT', images: ['https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800'] },
-    { artisanIdx: 2, title: 'Generator Maintenance', description: 'Service and repair generators of all brands', price: 20000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800'] },
+    { artisanIdx: 2, title: 'Generator Maintenance', description: 'Service and repair generators of all brands', price: 20000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1523559094051-53bac879eb80?w=800'] },
     // Gardening services
     { artisanIdx: 3, title: 'Lawn Mowing & Maintenance', description: 'Professional lawn care service', price: 10000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1558904541-efa843a96f01?w=800', 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800'] },
     { artisanIdx: 3, title: 'Garden Design & Landscaping', description: 'Custom garden design and setup', price: 50000, priceType: 'STARTING_AT', images: ['https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800', 'https://images.unsplash.com/photo-1560743641-3914f2c45636?w=800'] },
-    { artisanIdx: 3, title: 'Tree Trimming & Removal', description: 'Safe and professional tree services', price: 25000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800'] },
+    { artisanIdx: 3, title: 'Tree Trimming & Removal', description: 'Safe and professional tree services', price: 25000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1754321889123-0485c7fea5f1?w=800'] },
     // Carpentry services
-    { artisanIdx: 4, title: 'Furniture Repair & Restoration', description: 'Repair and restore wooden furniture', price: 30000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=800'] },
-    { artisanIdx: 4, title: 'Doors & Windows Installation', description: 'Install and repair doors, windows, and frames', price: 35000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800'] },
+    { artisanIdx: 4, title: 'Furniture Repair & Restoration', description: 'Repair and restore wooden furniture', price: 30000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1756736668332-e921516c1305?w=800'] },
     { artisanIdx: 4, title: 'Custom Woodwork & Carpentry', description: 'Custom shelves, cabinets, wardrobes, and more', price: 18000, priceType: 'HOURLY', images: ['https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=800'] },
     // Painting services
     { artisanIdx: 5, title: 'Interior Painting', description: 'Professional interior painting services', price: 12000, priceType: 'HOURLY', images: ['https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800'] },
-    { artisanIdx: 5, title: 'Wallpaper Installation', description: 'Professional wallpaper hanging and removal', price: 45000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800'] },
+    { artisanIdx: 5, title: 'Wallpaper Installation', description: 'Professional wallpaper hanging and removal', price: 45000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1615873968403-89e068629265?w=800'] },
     // Barber services
     { artisanIdx: 6, title: 'Barbing & Haircut', description: 'Professional haircuts, shaves, and grooming for men and boys', price: 3000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1530550424927-9e80a195af9d?w=800', 'https://images.unsplash.com/photo-1703792686667-7486746389a1?w=800'] },
     { artisanIdx: 6, title: 'Kids Haircut', description: 'Gentle and patient haircuts for children', price: 2000, priceType: 'FIXED', images: ['https://images.unsplash.com/photo-1703792686667-7486746389a1?w=800'] },
@@ -368,7 +367,6 @@ async function main() {
     { sellerIdx: 0, title: 'LED Flood Light', description: 'Bright portable LED flood light for construction sites', price: 8500, stockQuantity: 100, images: ['https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=800'] },
     { sellerIdx: 0, title: 'Plumbing Fittings Bundle', description: 'Assorted plumbing fittings and connectors', price: 12000, stockQuantity: 200, images: ['https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800'] },
     { sellerIdx: 1, title: 'Handmade Ankara Wall Art', description: 'Beautiful handcrafted Ankara fabric wall decoration', price: 15000, stockQuantity: 20, images: ['https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800'] },
-    { sellerIdx: 1, title: 'Custom Name Sign (Wood)', description: 'Personalized wooden name sign for your home or office', price: 12000, stockQuantity: 30, images: ['https://images.unsplash.com/photo-1532372576444-dda954194ad0?w=800'] },
     { sellerIdx: 1, title: 'Decorative Plant Pot Set', description: 'Set of 3 handpainted decorative plant pots', price: 8500, stockQuantity: 45, images: ['https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800', 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=800'] },
     // Street fruit seller products
     { sellerIdx: 2, title: 'Fresh Oranges (bunch)', description: 'Juicy sweet oranges fresh from the orchard — perfect for juice or snacking', price: 1500, stockQuantity: 200, images: ['https://images.unsplash.com/photo-1543168256-418811576931?w=800', 'https://images.unsplash.com/photo-1766673097202-248bc5029d51?w=800'] },

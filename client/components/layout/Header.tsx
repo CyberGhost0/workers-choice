@@ -51,6 +51,18 @@ export function Header() {
             >
               Reviews
             </Link>
+            <Link
+              href="/house-rent"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              House Rent
+            </Link>
+            <Link
+              href="/house-for-sale"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              House for Sale
+            </Link>
             {user && (
               <Link
                 href="/chat"
@@ -167,6 +179,20 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Reviews
+              </Link>
+              <Link
+                href="/house-rent"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                House Rent
+              </Link>
+              <Link
+                href="/house-for-sale"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                House for Sale
               </Link>
               {user && (
                 <Link

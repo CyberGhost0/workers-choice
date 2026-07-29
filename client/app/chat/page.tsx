@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { ImageCarousel } from '@/components/ui/ImageCarousel';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { WelcomeWindow } from '@/components/chat/WelcomeWindow';
 import { MessageStatus, TypingIndicator, UnreadBadge, OnlineStatus, ConversationPreview } from '@/components/chat/MessageStatus';
@@ -121,7 +122,7 @@ const mockMessages: Message[] = [
     content: 'Sure, here it is.',
     timestamp: '2024-01-15T09:10:00Z',
     status: 'read',
-    attachments: [{ type: 'image', url: '/placeholder-faucet.jpg', name: 'faucet.jpg' }],
+    attachments: [{ type: 'image', url: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400', name: 'faucet.jpg' }],
   },
   {
     id: 'm4',
@@ -141,9 +142,23 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const emojis = ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','🤩','😘','🥰','😜','🤪','😝','🤑','🤗','🤭','🤔','🤐','😐','😑','😶','😏','😒','🙄','😬','😮','😯','😲','😳','🥺','😢','😭','😤','😠','😡','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','💋','👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','👍','👎','✊','👊','🤛','🤜','👏','🙌','🫶','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦵','🦶','👂','🦻','👃','🧠','🫀','🫁','🦷','🦴','👀','👁️','👅','👄','❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','☮️','✝️','☪️','🕉️','☸️','✡️','🔯','🕎','☯️','☦️','🛐','⛎','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','🆔','⚕️','♻️','⚜️','🔱','📛','🔰','⭕','✅','☑️','✔️','✖️','❌','❎','➕','➖','➗','➰','〽️','✳️','✴️','❇️','‼️','⁉️','❓','❔','❕','❗','〰️','©️','®️','™️','♠️','♥️','♦️','♣️','🃏','🀄','🎴','🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚫','⚪','🟥','🟧','🟨','🟩','🟦','🟪','🟫','⬛','⬜','◼️','◻️','◾','◽','▪️','▫️','🔶','🔷','🔸','🔹','🔺','🔻','💬','🗨️','🗯️','💭','💤','👋','🤚','🖐️','✋','🖖','🫱','🫲','🫳','🫴','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','👍','👎','✊','👊','🤛','🤜','👏','🙌','🫶','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦵','🦶'];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -371,9 +386,7 @@ export default function ChatPage() {
                       {msg.attachments?.map((att, idx) => (
                         <div key={idx} className="mb-2">
                           {att.type === 'image' ? (
-                            <div className="w-48 h-32 bg-black/10 rounded-lg flex items-center justify-center">
-                              <ImageIcon className="h-8 w-8 opacity-50" />
-                            </div>
+                            <ImageCarousel images={[att.url]} alt="Shared image" className="w-48 h-32 rounded-lg" interval={5000} />
                           ) : (
                             <div className="flex items-center gap-2 p-2 bg-black/10 rounded-lg">
                               <File className="h-8 w-8" />
@@ -461,14 +474,32 @@ export default function ChatPage() {
                     }}
                     className="flex-1 px-4 py-2 rounded-full border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <Smile className="h-5 w-5" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Add emoji</TooltipContent>
-                  </Tooltip>
+                  <div className="relative" ref={emojiPickerRef}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                          <Smile className="h-5 w-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Add emoji</TooltipContent>
+                    </Tooltip>
+                    {showEmojiPicker && (
+                      <div className="absolute bottom-full right-0 mb-2 bg-card border rounded-xl shadow-xl p-3 w-72 max-h-48 overflow-y-auto grid grid-cols-8 gap-1 z-50">
+                        {emojis.map((emoji, i) => (
+                          <button
+                            key={i}
+                            className="hover:bg-muted rounded p-1 text-lg leading-none"
+                            onClick={() => {
+                              setNewMessage((prev) => prev + emoji);
+                              setShowEmojiPicker(false);
+                            }}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button

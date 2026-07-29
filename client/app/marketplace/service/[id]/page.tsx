@@ -10,6 +10,7 @@ import { StarRating } from '@/components/ui/StarRating';
 import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
 import { ArrowLeft, Loader2, MessageCircle, MapPin, ShieldCheck } from 'lucide-react';
+import { ImageCarousel } from '@/components/ui/ImageCarousel';
 
 interface Service {
   id: string;
@@ -40,7 +41,6 @@ export default function ServiceDetailPage() {
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -103,32 +103,7 @@ export default function ServiceDetailPage() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Images */}
           <div>
-            <div className="aspect-video bg-muted rounded-xl overflow-hidden border">
-              {service.images[activeImage] ? (
-                <img
-                  src={service.images[activeImage]}
-                  alt={service.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-6xl">🔧</div>
-              )}
-            </div>
-            {service.images.length > 1 && (
-              <div className="flex gap-2 mt-3 flex-wrap">
-                {service.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImage(idx)}
-                    className={`w-16 h-16 rounded-lg overflow-hidden border-2 ${
-                      idx === activeImage ? 'border-primary' : 'border-transparent'
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
+            <ImageCarousel images={service.images} alt={service.title} className="aspect-video rounded-xl overflow-hidden border" interval={5000} />
           </div>
 
           {/* Details */}

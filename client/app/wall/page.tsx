@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { ImageCarousel } from '@/components/ui/ImageCarousel';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { api } from '@/lib/api';
 import { formatCurrency, formatDate, getInitials } from '@/lib/utils';
@@ -435,11 +436,7 @@ export default function WallPage() {
                         key={idx}
                         className="aspect-video bg-muted flex items-center justify-center overflow-hidden"
                       >
-                        <img
-                          src={img}
-                          alt={`Post image ${idx + 1}`}
-                          className="w-full h-full object-cover"
-                        />
+                        <ImageCarousel images={[img]} alt={`Post image ${idx + 1}`} className="w-full h-full" interval={5000} />
                       </div>
                     ))}
                   </div>

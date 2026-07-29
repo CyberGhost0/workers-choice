@@ -1,0 +1,1 @@
+internal postgresql://workers_choice_db_user:JwUoTKAXEByzrm5QpiOgLWEnou1J4cSR@dpg-d9j6to4m0tmc73ah669g-a/workers_choice_db

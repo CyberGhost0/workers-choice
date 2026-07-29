@@ -10,6 +10,7 @@ import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
 import { filterSuggestions, normalizeSearchQuery } from '@/lib/services';
 import { StarRating } from '@/components/ui/StarRating';
+import { ImageCarousel } from '@/components/ui/ImageCarousel';
 import {
   Search,
   MapPin,
@@ -78,7 +79,6 @@ const categories = [
   { id: 'painting', name: 'Painting', icon: '🎨' },
   { id: 'gardening', name: 'Gardening', icon: '🌿' },
   { id: 'moving', name: 'Moving', icon: '📦' },
-  { id: 'barber', name: 'Barbing Salon', icon: '💈' },
   { id: 'products', name: 'Products', icon: '🛍️' },
 ];
 
@@ -312,17 +312,7 @@ function MarketplaceContent() {
                           : 'h-48'
                       } bg-muted relative`}
                     >
-                      {service.images[0] ? (
-                        <img
-                          src={service.images[0]}
-                          alt={service.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-4xl">
-                          🔧
-                        </div>
-                      )}
+                      <ImageCarousel images={service.images} alt={service.title} className="w-full h-full" interval={5000} />
                     </div>
                     <div className="p-4 flex-1">
                       <div className="flex items-start justify-between gap-2">
@@ -368,17 +358,7 @@ function MarketplaceContent() {
                           : 'h-48'
                       } bg-muted relative`}
                     >
-                      {product.images[0] ? (
-                        <img
-                          src={product.images[0]}
-                          alt={product.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-4xl">
-                          🛍️
-                        </div>
-                      )}
+                      <ImageCarousel images={product.images} alt={product.title} className="w-full h-full" interval={5000} />
                     </div>
                     <div className="p-4 flex-1">
                       <div className="flex items-start justify-between gap-2">

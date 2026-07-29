@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Wrench, ExternalLink, Store, ShoppingBag, Loader2 } from 'lucide-react';
+import { Wrench, ExternalLink, Store, ShoppingBag, Loader2, RefreshCw } from 'lucide-react';
 import { api } from '@/lib/api';
 import { mediaUrl } from '@/lib/utils';
 
@@ -38,22 +38,29 @@ function isToolProduct(title: string): boolean {
 export function PartsMarketplace() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchProducts = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+    try {
+      const res = await api.get('/products');
+      const all = res.data.products || [];
+      const tools = all.filter((p: Product) => isToolProduct(p.title));
+      setProducts(tools);
+    } catch {
+      setProducts([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await api.get('/products');
-        const all = res.data.products || [];
-        const tools = all.filter((p: Product) => isToolProduct(p.title));
-        setProducts(tools);
-      } catch {
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchProducts();
-  }, []);
+    const interval = setInterval(() => fetchProducts(true), 10 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchProducts]);
 
   return (
     <section className="py-12">
@@ -61,6 +68,14 @@ export function PartsMarketplace() {
         <div className="flex items-center gap-2 mb-2">
           <Wrench className="h-5 w-5 text-secondary" />
           <h2 className="text-2xl font-bold">Tools &amp; Replacement Parts</h2>
+          <button
+            onClick={() => fetchProducts(true)}
+            disabled={refreshing}
+            className="ml-2 p-1.5 rounded-lg hover:bg-muted transition-colors disabled:opacity-50"
+            title="Refresh products"
+          >
+            <RefreshCw className={`h-4 w-4 text-muted-foreground ${refreshing ? 'animate-spin' : ''}`} />
+          </button>
         </div>
         <p className="text-muted-foreground text-sm mb-6 max-w-2xl">
           Cheap parts and tools for artisans and small businesses. Buy directly from local sellers

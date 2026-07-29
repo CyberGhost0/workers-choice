@@ -347,11 +347,13 @@ export default function Home() {
               { name: 'Painting', icon: '🎨', count: 90 },
               { name: 'Gardening', icon: '🌿', count: 110 },
               { name: 'Moving', icon: '📦', count: 60 },
+              { name: 'House Rent', icon: '🏠', count: 45, href: '/house-rent' },
+              { name: 'House for Sale', icon: '🏡', count: 35, href: '/house-for-sale' },
               { name: 'More...', icon: '➕', count: 0 },
             ].map((category) => (
               <Link
                 key={category.name}
-                href={`/marketplace?category=${category.name.toLowerCase()}`}
+                href={category.href || `/marketplace?category=${category.name.toLowerCase()}`}
                 className="bg-card rounded-xl p-4 shadow-sm border hover:shadow-md transition-shadow text-center"
               >
                 <div className="text-3xl mb-1">{category.icon}</div>

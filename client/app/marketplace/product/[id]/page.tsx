@@ -10,6 +10,7 @@ import { StarRating } from '@/components/ui/StarRating';
 import { api } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
 import { ArrowLeft, Loader2, MessageCircle, ShoppingCart, ShieldCheck } from 'lucide-react';
+import { ImageCarousel } from '@/components/ui/ImageCarousel';
 
 interface Product {
   id: string;
@@ -40,7 +41,6 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -105,32 +105,7 @@ export default function ProductDetailPage() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Images */}
           <div>
-            <div className="aspect-video bg-muted rounded-xl overflow-hidden border">
-              {product.images[activeImage] ? (
-                <img
-                  src={product.images[activeImage]}
-                  alt={product.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-6xl">🛍️</div>
-              )}
-            </div>
-            {product.images.length > 1 && (
-              <div className="flex gap-2 mt-3 flex-wrap">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImage(idx)}
-                    className={`w-16 h-16 rounded-lg overflow-hidden border-2 ${
-                      idx === activeImage ? 'border-primary' : 'border-transparent'
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
+            <ImageCarousel images={product.images} alt={product.title} className="aspect-video rounded-xl overflow-hidden border" interval={5000} />
           </div>
 
           {/* Details */}
